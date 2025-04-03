@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.30.0",
+    "@google/generative-ai": "^0.24.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -31,7 +32,7 @@
     "@vercel/kv": "^1.0.1",
     "@vercel/node": "^3.0.28",
     "@vercel/og": "^0.6.2",
-    "ai": "^3.0.12",
+    "ai": "^3.4.33",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "consola": "^3.2.3",
@@ -56,6 +57,7 @@
     "react-textarea-autosize": "^8.5.3",
     "remark-gfm": "^3.0.1",
     "remark-math": "^5.1.1",
+    "rsc": "^1.0.3",
     "sonner": "^1.4.3",
     "usehooks-ts": "^2.16.0",
     "zod": "^3.22.4"
@@ -63,7 +65,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@types/d3-scale": "^4.0.8",
-    "@types/node": "^20.11.5",
+    "@types/node": "^20.17.28",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-syntax-highlighter": "^15.5.11",

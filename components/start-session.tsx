@@ -30,10 +30,9 @@ const exampleMessages = [
 
 interface StartSessionProps {
     onStartedChange: (isStarted: boolean) => void;
-    onSetPatientProfile: (selectedPatientName: PatientProfile) => void;
 }
 
-export function StartSession({ onStartedChange, onSetPatientProfile }: StartSessionProps) {
+export function StartSession({ onStartedChange }: StartSessionProps) {
     const [isStarted, setIsStarted] = useState(false);
     const [patientProfile, setPatientProfile] = useState<PatientProfile>(initialProfile);
 
@@ -50,9 +49,7 @@ export function StartSession({ onStartedChange, onSetPatientProfile }: StartSess
         onStartedChange(isStarted);
     }, [isStarted, onStartedChange]);
 
-    useEffect(() => {
-        onSetPatientProfile(patientProfile);
-    }, [patientProfile, onSetPatientProfile]);
+
 
 
 
@@ -62,11 +59,13 @@ export function StartSession({ onStartedChange, onSetPatientProfile }: StartSess
                 <h1 className="text-xl font-semibold">
                     CBT session with a simulated client powered by AI
                 </h1>
-                <PatientTypeMenu
-                    onStartedChange={handleStartedChange}
-                    onSetPatientProfile={handleSetdPatientProfile} ></PatientTypeMenu>
+                <button
+                    onClick={() => setIsStarted(true)}
+                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                    Start Session
+                </button>
             </div>
-            <Stopwatch />
-        </div >
-    )
+        </div>
+    );
 }

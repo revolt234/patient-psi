@@ -135,18 +135,23 @@ export async function shareChat(id: string) {
 }
 
 export async function saveChat(chat: Chat) {
-  const session = await auth()
+  const session = await auth();
 
   if (session && session.user) {
-    const pipeline = kv.pipeline()
-    pipeline.hmset(`chat:${chat.id}`, chat)
+    console.log(`Salvataggio chat ${chat.id} per utente ${chat.userId}`);
+
+    const pipeline = kv.pipeline();
+    pipeline.hmset(`chat:${chat.id}`, chat);
     pipeline.zadd(`user:chat:${chat.userId}`, {
       score: Date.now(),
       member: `chat:${chat.id}`
-    })
-    await pipeline.exec()
+    });
+
+    await pipeline.exec();
+    console.log('Chat salvata con successo.');
   } else {
-    return
+    console.error('Utente non autenticato. Impossibile salvare la chat.');
+    return;
   }
 }
 

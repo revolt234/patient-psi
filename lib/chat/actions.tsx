@@ -103,16 +103,27 @@ async function submitUserMessage(content, type) {
    - Non ripetere mai domande già fatte. Se non ci sono domande nuove, inventane una pertinente.  
     ⚠ IMPORTANTE: Scrivi solo il messaggio, senza spiegare le modifiche fatte.`;
   }
-
+  let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
+  let textNode: undefined | React.ReactNode
   const response = await chatSession.sendMessage(prompt);
   const messageContent = response.response?.text() || 'Nessuna risposta valida.';
+  if (!textStream) {
+    textStream = createStreamableValue('')
+    textNode = <BotMessage content={textStream.value} />
+  }
+    textStream.update(messageContent)
+  textStream.done()
+console.log('🟡 Sto per chiamare done()...');
+aiState.done({
+  ...aiState.get(),
+  messages: [...aiState.get().messages, { id: nanoid(), role: 'assistant', content: messageContent }]
+});
+console.log('🟢 done() è stata chiamata!');
 
-  aiState.done({
-    ...aiState.get(),
-    messages: [...aiState.get().messages, { id: nanoid(), role: 'assistant', content: messageContent }]
-  });
-
-  return { id: nanoid(), display: <BotMessage content={messageContent} /> };
+   return {
+    id: nanoid(),
+    display: textNode
+  }
 }
 
 export type Message = {
@@ -151,15 +162,19 @@ export const AI = createAI<AIState, UIState>({
       return;
     }
   },
-  unstable_onSetAIState: async ({ state, done }) => {
-    'use server';
-    const session = await auth();
+   unstable_onSetAIState: async ({ state, done }) => {
+    'use server'
+
+    const session = await auth()
+
     if (session && session.user) {
-      const { chatId, messages } = state;
-      const createdAt = new Date();
-      const userId = session.user.id as string;
-      const path = `/chat/${chatId}`;
-      const title = messages[0]?.content.substring(0, 100) || 'Nuova Chat';
+      const { chatId, messages } = state
+
+      const createdAt = new Date()
+      const userId = session.user.id as string
+      const path = `/chat/${chatId}`
+      const title = messages[0].content.substring(0, 100)
+
       const chat: Chat = {
         id: chatId,
         title,
@@ -167,13 +182,14 @@ export const AI = createAI<AIState, UIState>({
         createdAt,
         messages,
         path
-      };
-      await saveChat(chat);
+      }
+
+      await saveChat(chat)
     } else {
-      return;
+      return
     }
   }
-});
+})
 
 export const getUIStateFromAIState = (aiState: AIState) => {
   return aiState.messages
